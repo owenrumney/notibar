@@ -18,7 +18,7 @@ def get_github_notifications():
     response = requests.get(
         "https://api.github.com/notifications",
         headers={"Authorization": f"token {token}"},
-        # params={"participating": "true"}
+        params={"participating": "true"}
     )
 
     if response.status_code != 200:
@@ -26,29 +26,29 @@ def get_github_notifications():
         return []
     
     print(f"Fetched {len(response.json())} notifications.")
+    # print("Notifications:", response.json())
     return response.json()
 
-def mark_notification_as_read(notification_id):
+def get_html_url(url):
     """
-    Mark a notification as read.
+    Convert a URL to HTML format.
     """
     token = get_github_token()
     if not token:
         print("No GitHub token found.")
-        return False
-    
-    response = requests.patch(
-        f"https://api.github.com/notifications/threads/{notification_id}",
-        headers={"Authorization": f"token {token}"},
-        json={"read": True}
+        return ""
+    response = requests.get(
+        url,
+        headers={"Authorization": f"token {token}", "Accept": "application/vnd.github+json"},
     )
-
-    if response.status_code != 205:
-        print(f"Error marking notification as read: {response.status_code}")
-        return False
-    
-    print(f"Marked notification {notification_id} as read.")
-    return True
+    if response.status_code != 200:
+        print(f"Error fetching HTML URL: {response.status_code}")
+        return ""
+    html_url = response.json().get("html_url")
+    if not html_url:
+        print("No HTML URL found in the response.")
+        return ""
+    return html_url
 
 def mark_notification_as_done(notification_id):
     """
@@ -65,7 +65,7 @@ def mark_notification_as_done(notification_id):
 
     )
 
-    if response.status_code != 205:
+    if response.status_code != 204:
         print(f"Error marking notification as done: {response.status_code}")
         return False
     

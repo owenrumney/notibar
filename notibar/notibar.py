@@ -1,7 +1,8 @@
+from rumps import rumps as menu
 import rumps
 
 from github.credentials import get_github_token, save_github_token
-from github.notifications import get_github_notifications, mark_notification_as_done, mark_notification_as_read
+from github.notifications import get_github_notifications, get_html_url, mark_notification_as_done
 import webbrowser
 
 
@@ -9,16 +10,23 @@ def open_url(url, notification_id):
     """
     Open a URL in the default web browser.
     """
-    webbrowser.open(url)
+    print(f"Opening URL: {url} for notification ID: {notification_id}")
+    html_url = get_html_url(url)
+    if html_url:
+        webbrowser.open(html_url)
+    else:
+        webbrowser.open(url)
     mark_notification_as_done(notification_id)
 
 class NotibarApp(rumps.App):
     def __init__(self):
         super(NotibarApp, self).__init__("Notibar", quit_button=None)
-        self.menu = ["Settings", "Quit"]
+        self.menu = ["Refresh", "Settings", "Quit"]
         self.notification_count = 0
 
-
+    @rumps.clicked("Refresh")
+    def refresh(self, sender):
+        self.update_notifications(sender)
 
     @rumps.clicked("Settings")
     def settings(self, sender):
@@ -38,22 +46,25 @@ class NotibarApp(rumps.App):
     @rumps.timer(600)
     def update_notifications(self, sender):
         for item in self.menu:
-                if item not in ['Settings', 'Quit']:
+                if item not in ['Refresh', 'Settings', 'Quit']:
                     del self.menu[item]
-                elif isinstance(item, rumps.MenuItem):
+                elif isinstance(item, menu.MenuItem):
                     self.menu.remove(item)
         notifications = get_github_notifications()
         self.notification_count = len(notifications)
         if self.notification_count > 0:
             self.title = f"📢 ({self.notification_count})"
-            menu = []
             for notification in notifications:
                 id = notification.get('id')
+                repo = notification.get('repository', {}).get('name', 'Unknown Repository')
                 title = notification.get('subject', {}).get('title', 'No Title')
-                url = notification.get('subject', {}).get('url', '#').replace("api.github.com/repos", "github.com")
-                self.menu.insert_before("Settings",rumps.MenuItem(title, callback=lambda x, id=id: open_url(url, id)))
-            menu.append(["---"])
-            self.menu.insert_before("Settings", menu)
+                url = notification.get('subject', {}).get('url', '#')
+                self.menu.insert_before("Refresh",menu.MenuItem(f'{repo}: {title}', callback=lambda x, url=url, id=id: (
+                    open_url(url, id) ,
+                    self.update_notifications(sender)
+                )
+                ))
+            self.menu.insert_before("Refresh", menu.SeparatorMenuItem())
             rumps.notification("Notibar", "New Notifications", f"You have {self.notification_count} new notifications.")
         else:
             self.title = f"📢"
