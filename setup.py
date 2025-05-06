@@ -3,6 +3,7 @@ from setuptools import setup
 APP = ['notibar/notibar.py']
 DATA_FILES = []
 OPTIONS = {
+    'iconfile': 'logo.icns',
     'argv_emulation': False,
     'plist': {
         'LSUIElement': True,
