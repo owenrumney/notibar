@@ -1,4 +1,7 @@
 autocommand==2.2.2
+certifi==2025.4.26
+charset-normalizer==3.4.1
+idna==3.10
 jaraco.classes==3.4.0
 jaraco.context==6.0.1
 jaraco.functools==4.1.0
@@ -7,5 +10,7 @@ keyring==25.6.0
 more-itertools==10.7.0
 pyobjc-core==11.0
 pyobjc-framework-Cocoa==11.0
+requests==2.32.3
 rumps==0.4.0
 setuptools==70.3.0
+urllib3==2.4.0
