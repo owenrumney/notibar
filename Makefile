@@ -14,5 +14,6 @@ build: activate-env
 install: build
 	@echo "Installing the app"
 	@rm -rf /Applications/notibar.app
-	@mv dist/*.app /Applications
+	@ls -l dist/
+	@mv dist/notibar.app /Applications/Notibar.app
 	@echo "App installed in /Applications"
