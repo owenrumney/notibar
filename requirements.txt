@@ -13,4 +13,4 @@ pyobjc-framework-Cocoa==11.0
 requests==2.32.4
 rumps==0.4.0
 setuptools==78.1.1
-urllib3==2.4.0
+urllib3==2.5.0
