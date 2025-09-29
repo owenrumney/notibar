@@ -4,7 +4,9 @@ import rumps
 from github.credentials import get_github_token, save_github_token
 from github.notifications import get_github_notifications, get_html_url, mark_notification_as_done
 import webbrowser
+from log import log_info
 
+POLL_INTERVAL = 600
 
 def open_url(url, notification_id):
     """
@@ -26,10 +28,12 @@ class NotibarApp(rumps.App):
 
     @rumps.clicked("Refresh")
     def refresh(self, sender):
+        log_info("Refreshing notifications")
         self.update_notifications(sender)
 
     @rumps.clicked("Settings")
     def settings(self, sender):
+        log_info("Opening settings")
         window = rumps.Window("Enter your GITHUB_TOKEN","Settings",  default_text=get_github_token(), 
                               dimensions=(500, 20), ok="Save", cancel="Cancel")
 
@@ -43,7 +47,7 @@ class NotibarApp(rumps.App):
         else:
             rumps.notification("Notibar", "Cancelled", "Settings were not saved.")
     
-    @rumps.timer(600)
+    @rumps.timer(POLL_INTERVAL)
     def update_notifications(self, sender):
         for item in self.menu:
                 if item not in ['Refresh', 'Settings', 'Quit']:
@@ -72,6 +76,7 @@ class NotibarApp(rumps.App):
 
     @rumps.clicked("Quit")
     def quit_app(self, sender):
+        log_info("Quitting app")
         rumps.quit_application()
 
 if __name__ == "__main__":

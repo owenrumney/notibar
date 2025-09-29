@@ -9,6 +9,9 @@ OPTIONS = {
         'LSUIElement': True,
     },
     'packages': ['rumps', 'requests', 'keyring'],
+    'includes': ['log', 'github'],
+    'excludes': ['tkinter', 'test', 'unittest', 'pydoc'],
+    'optimize': 2,
 }
 
 setup(

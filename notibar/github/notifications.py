@@ -4,6 +4,7 @@ from urllib import response
 import requests
 
 from github.credentials import get_github_token
+from log import log_error
 
 
 def get_github_notifications():
@@ -22,7 +23,7 @@ def get_github_notifications():
     )
 
     if response.status_code != 200:
-        print(f"Error fetching notifications: {response.status_code}")
+        log_error(f"Error fetching notifications: {response.status_code}")
         return []
     
     print(f"Fetched {len(response.json())} notifications.")
