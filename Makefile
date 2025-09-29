@@ -6,9 +6,9 @@ activate-env:
 	@. .env/bin/activate
 
 .PHONY: build
-build: activate-env
+build:
 	@echo "Building a run as an app"
-	@python3 setup.py py2app
+	@. .env/bin/activate && python3 setup.py py2app
 
 .PHONY: install
 install: build

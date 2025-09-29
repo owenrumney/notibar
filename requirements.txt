@@ -14,3 +14,9 @@ requests==2.32.4
 rumps==0.4.0
 setuptools==78.1.1
 urllib3==2.5.0
+py2app==0.28.8
+macholib==1.16.3
+altgraph==0.17.4
+modulegraph==0.19.6
+packaging==25.0
+
