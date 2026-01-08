@@ -13,7 +13,7 @@ pyobjc-framework-Cocoa==11.0
 requests==2.32.4
 rumps==0.4.0
 setuptools==78.1.1
-urllib3==2.6.0
+urllib3==2.6.3
 py2app==0.28.8
 macholib==1.16.3
 altgraph==0.17.4
